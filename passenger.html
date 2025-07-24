@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bus Ticket Booking</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Bus Ticket Booking</h1>
+
+    <section id="search-section">
+      <h2>Search for Buses</h2>
+      <div class="form-group">
+        <label for="fromInput">From:</label>
+        <input type="text" id="fromInput" placeholder="Enter departure city">
+      </div>
+      <div class="form-group">
+        <label for="toInput">To:</label>
+        <input type="text" id="toInput" placeholder="Enter destination city">
+      </div>
+
+      
+      <button onclick="searchBuses()">Search</button>
+    </section>
+
+    <section id="results-section">
+      <h2>Available Buses</h2>
+      <div id="results"></div>
+    </section>
+  </div>
+
+  
+</body>
+<script type="module" src="passenger.js"></script>
+</html>

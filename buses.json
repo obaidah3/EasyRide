@@ -1,0 +1,62 @@
+{
+  "BUS001": {
+    "from": "Alexandria",
+    "to": "Cairo",
+    "time": "2025-07-25T08:00",
+    "seats": 40
+  },
+  "BUS002": {
+    "from": "Cairo",
+    "to": "Hurghada",
+    "time": "2025-07-25T10:30",
+    "seats": 45
+  },
+  "BUS003": {
+    "from": "Tanta",
+    "to": "Alexandria",
+    "time": "2025-07-25T12:15",
+    "seats": 35
+  },
+  "BUS004": {
+    "from": "Mansoura",
+    "to": "Cairo",
+    "time": "2025-07-25T14:00",
+    "seats": 50
+  },
+  "BUS005": {
+    "from": "Cairo",
+    "to": "Ismailia",
+    "time": "2025-07-25T16:45",
+    "seats": 42
+  },
+  "BUS006": {
+    "from": "Aswan",
+    "to": "Luxor",
+    "time": "2025-07-26T07:30",
+    "seats": 30
+  },
+  "BUS007": {
+    "from": "Giza",
+    "to": "Alexandria",
+    "time": "2025-07-26T09:00",
+    "seats": 36
+  },
+  "BUS008": {
+    "from": "Cairo",
+    "to": "Port Said",
+    "time": "2025-07-26T11:20",
+    "seats": 38
+  },
+  "BUS009": {
+    "from": "Zagazig",
+    "to": "Tanta",
+    "time": "2025-07-26T13:00",
+    "seats": 33
+  },
+  "BUS010": {
+    "from": "Luxor",
+    "to": "Cairo",
+    "time": "2025-07-26T15:45",
+    "seats": 44
+  }
+}

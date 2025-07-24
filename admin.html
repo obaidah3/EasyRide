@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard - Bus Ticket System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="connection-status disconnected" id="connection-status">Disconnected</div>
+  
+  <div class="container">
+    <header>
+      <h1>🚌 Bus Ticket Management System</h1>
+      <p>Manage Buses, Passengers, and Bookings</p>
+    </header>
+
+    <div class="tabs">
+      <button class="tab-button active" data-tab="buses">🚌 Bus Management</button>
+      <button class="tab-button" data-tab="passengers">👥 Passenger Management</button>
+      <button class="tab-button" data-tab="bookings">🎫 Bookings</button>
+      <button class="tab-button" data-tab="analytics">📊 Analytics</button>
+    </div>
+
+    <!-- Bus Management -->
+    <div id="buses" class="tab-content active">
+      <div class="section">
+        <h2>Add New Bus</h2>
+        <form id="add-bus-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>From:</label>
+              <input type="text" id="bus-from" required placeholder="Departure city">
+            </div>
+            <div class="form-group">
+              <label>To:</label>
+              <input type="text" id="bus-to" required placeholder="Destination city">
+            </div>
+            <div class="form-group">
+              <label>Departure Time:</label>
+              <input type="datetime-local" id="bus-time" required>
+            </div>
+            <div class="form-group">
+              <label>Total Seats:</label>
+              <input type="number" id="bus-seats" required min="1" max="100" placeholder="e.g., 50">
+            </div>
+            <div class="form-group">
+              <label>Price:</label>
+              <input type="number" id="bus-price" required min="0" step="0.01" placeholder="e.g., 25.50">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Add Bus</button>
+        </form>
+      </div>
+
+      <div class="section">
+        <h2>Bus List</h2>
+        <input type="text" class="search-box" id="bus-search" placeholder="🔍 Search buses...">
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Bus ID</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Departure Time</th>
+                <th>Total Seats</th>
+                <th>Booked</th>
+                <th>Available</th>
+                <th>Price</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="buses-table-body">
+              <tr>
+                <td colspan="9" class="loading">Loading data...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Passenger Management -->
+    <div id="passengers" class="tab-content">
+      <div class="section">
+        <h2>Add New Passenger</h2>
+        <form id="add-passenger-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Full Name:</label>
+              <input type="text" id="passenger-name" required placeholder="John Doe">
+            </div>
+            <div class="form-group">
+              <label>Phone Number:</label>
+              <input type="tel" id="passenger-phone" required placeholder="+1234567890">
+            </div>
+            <div class="form-group">
+              <label>Email:</label>
+              <input type="email" id="passenger-email" placeholder="john@example.com">
+            </div>
+            <div class="form-group">
+              <label>ID Number:</label>
+              <input type="text" id="passenger-id" required placeholder="National ID">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Add Passenger</button>
+        </form>
+      </div>
+
+      <div class="section">
+        <h2>Passenger List</h2>
+        <input type="text" class="search-box" id="passenger-search" placeholder="🔍 Search passengers...">
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Passenger ID</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>ID Number</th>
+                <th>Total Bookings</th>
+                <th>Registration Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="passengers-table-body">
+              <tr>
+                <td colspan="8" class="loading">Loading data...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bookings -->
+    <div id="bookings" class="tab-content">
+      <div class="section">
+        <h2>Create New Booking</h2>
+        <form id="add-booking-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Select Passenger:</label>
+              <select id="booking-passenger" required>
+                <option value="">Choose passenger...</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Select Bus:</label>
+              <select id="booking-bus" required>
+                <option value="">Choose bus...</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Seat Number:</label>
+              <input type="number" id="booking-seat" required min="1" placeholder="Seat number">
+            </div>
+            <div class="form-group">
+              <label>Booking Status:</label>
+              <select id="booking-status" required>
+                <option value="confirmed">Confirmed</option>
+                <option value="pending">Pending</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Create Booking</button>
+        </form>
+      </div>
+
+      <div class="section">
+        <h2>Booking List</h2>
+        <input type="text" class="search-box" id="booking-search" placeholder="🔍 Search bookings...">
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Booking ID</th>
+                <th>Passenger</th>
+                <th>Route</th>
+                <th>Seat</th>
+                <th>Departure</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Booking Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="bookings-table-body">
+              <tr>
+                <td colspan="9" class="loading">Loading data...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analytics -->
+    <div id="analytics" class="tab-content">
+      <div class="section">
+        <h2>System Overview</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number" id="total-buses">0</div>
+            <div>Total Buses</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="total-passengers">0</div>
+            <div>Total Passengers</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="total-bookings">0</div>
+            <div>Total Bookings</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="booked-seats">0</div>
+            <div>Booked Seats</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="available-seats">0</div>
+            <div>Available Seats</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="total-revenue">$0</div>
+            <div>Total Revenue</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Popular Routes</h2>
+        <div id="popular-routes">
+          <div class="loading">Loading analytics...</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Frequent Passengers</h2>
+        <div id="frequent-passengers">
+          <div class="loading">Loading analytics...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div id="edit-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn">&times;</span>
+      <h3 id="modal-title">Edit</h3>
+      <form id="edit-form">
+        <div id="modal-form-content"></div>
+        <div style="margin-top: 20px;">
+          <button type="submit" class="btn btn-success">Save Changes</button>
+          <button type="button" class="btn btn-warning" id="cancel-edit">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+<script type="module" src="admin.js"></script>
+</html>
+    
