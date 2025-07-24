@@ -108,6 +108,75 @@ All data is stored and updated in real-time using **Firebase Realtime Database**
 
 ---
 
+## 🗂️ Project Folder Structure
+
+```
+EasyRide/
+│
+├── admin.html               # Admin Dashboard Interface
+├── admin.js                 # Script for managing buses and bookings
+├── admin.css                # Styles for the admin dashboard
+│
+├── passenger.html           # Passenger ticket booking UI
+├── passenger.js             # Script for handling passenger booking logic
+├── style.css                # Shared styles for the project
+│
+├── firebase-config.js       # Firebase connection configuration
+├── db test .py              # Database connection test script (optional)
+├── buses.json               # Sample or seed data for buses
+│
+├── read.md                  # Detailed project documentation (README)
+└── .git                     # Git metadata (not displayed)
+```
+
+---
+
+## 🔁 System Architecture Flowchart (Text-based)
+
+```
+                          ┌────────────────────┐
+                          │  Passenger (User)  │
+                          └────────┬───────────┘
+                                   │
+                                   ▼
+                          ┌────────────────────┐
+                          │ passenger.html UI  │◄────┐
+                          └────────┬───────────┘     │
+                                   ▼                 │
+                          ┌────────────────────┐     │
+                          │ passenger.js       │     │
+                          └────────┬───────────┘     │
+                                   ▼                 │
+                          ┌────────────────────┐     │
+                          │ Firebase Realtime   │◄────┘
+                          │   Database (API)    │
+                          └────────┬───────────┘
+                                   ▲
+                          ┌────────┴───────────┐
+                          │   admin.js         │
+                          └────────┬───────────┘
+                                   ▼
+                          ┌────────────────────┐
+                          │   admin.html UI    │
+                          └────────┬───────────┘
+                                   │
+                          ┌────────▼───────────┐
+                          │    admin.css       │
+                          └────────────────────┘
+```
+
+---
+
+## 📌 Summary
+
+* **Frontend**: Pure HTML/CSS/JavaScript interface for both users and admins.
+* **Backend**: Firebase Realtime Database (used directly via JS SDK).
+* **Admin Panel**: Full control to manage buses, bookings, and users.
+* **Passenger View**: Easy search and book experience.
+* **Data Layer**: All state updates reflected instantly via Firebase sync.
+
+
+---
 ## 🧰 Getting Started
 
 ### 1. Clone the Repository
