@@ -91,6 +91,9 @@ All data is stored and updated in real-time using **Firebase Realtime Database**
 
 ---
 
+
+
+
 ## 🛠️ Tech Stack
 
 | Layer    | Technology                          |
@@ -191,6 +194,33 @@ await set(bookingRef, bookingData);
 
 * Click "Clear" to reset all filters and reload bus list
 
+---
+
+## 🔁 System Flowchart (Mermaid)
+
+```mermaid
+flowchart TD
+    A[Passenger UI: passenger.html] --> B[Search Buses by City & Time]
+    B --> C[Select Bus & Seat]
+    C --> D[Submit Booking Form]
+    D --> E[Firebase: Create Booking Entry]
+
+    subgraph Admin Dashboard: admin.html
+        F[Add/Edit/Delete Buses] --> G[Firebase: Update Bus Data]
+        H[Manage Passengers] --> I[Firebase: Update Passenger Data]
+        J[View Bookings & Stats] --> K[Real-time Analytics]
+    end
+
+    E --> L[Firebase: Update Seat Availability]
+    L --> J
+    G --> J
+    I --> J
+
+    style A fill:#e0f7fa,stroke:#26c6da,stroke-width:2px
+    style F fill:#fff3e0,stroke:#ffa726,stroke-width:2px
+    style H fill:#fff3e0,stroke:#ffa726,stroke-width:2px
+    style J fill:#f3e5f5,stroke:#ab47bc,stroke-width:2px
+```
 ---
 
 ## 🚀 Contributing
