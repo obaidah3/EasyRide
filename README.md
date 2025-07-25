@@ -12,7 +12,6 @@ All data is stored and updated in real-time using **Firebase Realtime Database**
 ---
 
 # 📸 Screenshots
-## Showcasing the EasyRide Bus Ticket Management System in action:
 
 ###  🛠️ Admin Dashboard – Bus & Booking Management
 <div align="center"> <img src="https://github.com/user-attachments/assets/865d10eb-add6-423e-b108-7f3d8f25521e" alt="Passenger Booking Page" width="85%"> <br><br> <img src="https://github.com/user-attachments/assets/f2f6853d-914b-4b73-92ae-c26315870436" alt="Passenger Seat Availability & Search" width="85%"> <br> <br><img src="https://github.com/user-attachments/assets/563aa664-2303-47f1-920b-a57f5be4e345" alt="Admin - Add New Bus" width="85%"> <br><br> <img src="https://github.com/user-attachments/assets/bea47e76-2970-48a4-9a33-76deb0e6ec0c" alt="Admin - View & Edit Buses" width="85%"> <br> </div>
