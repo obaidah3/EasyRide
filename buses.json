@@ -3,60 +3,70 @@
     "from": "Alexandria",
     "to": "Cairo",
     "time": "2025-07-25T08:00",
-    "seats": 40
+    "seats": 40,
+    "price": 180
   },
   "BUS002": {
     "from": "Cairo",
     "to": "Hurghada",
     "time": "2025-07-25T10:30",
-    "seats": 45
+    "seats": 45,
+    "price": 250
   },
   "BUS003": {
     "from": "Tanta",
     "to": "Alexandria",
     "time": "2025-07-25T12:15",
-    "seats": 35
+    "seats": 35,
+    "price": 120
   },
   "BUS004": {
     "from": "Mansoura",
     "to": "Cairo",
     "time": "2025-07-25T14:00",
-    "seats": 50
+    "seats": 50,
+    "price": 140
   },
   "BUS005": {
     "from": "Cairo",
     "to": "Ismailia",
     "time": "2025-07-25T16:45",
-    "seats": 42
+    "seats": 42,
+    "price": 130
   },
   "BUS006": {
     "from": "Aswan",
     "to": "Luxor",
     "time": "2025-07-26T07:30",
-    "seats": 30
+    "seats": 30,
+    "price": 90
   },
   "BUS007": {
     "from": "Giza",
     "to": "Alexandria",
     "time": "2025-07-26T09:00",
-    "seats": 36
+    "seats": 36,
+    "price": 160
   },
   "BUS008": {
     "from": "Cairo",
     "to": "Port Said",
     "time": "2025-07-26T11:20",
-    "seats": 38
+    "seats": 38,
+    "price": 200
   },
   "BUS009": {
     "from": "Zagazig",
     "to": "Tanta",
     "time": "2025-07-26T13:00",
-    "seats": 33
+    "seats": 33,
+    "price": 100
   },
   "BUS010": {
     "from": "Luxor",
     "to": "Cairo",
     "time": "2025-07-26T15:45",
-    "seats": 44
+    "seats": 44,
+    "price": 300
   }
 }

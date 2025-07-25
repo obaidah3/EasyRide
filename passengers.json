@@ -1,0 +1,112 @@
+{
+  "passengers": {
+    "PASS001": {
+      "name": "Ahmed Ali",
+      "phone": "+201234567890",
+      "email": "ahmed.ali@example.com",
+      "nationalId": "29801011234567",
+      "registrationDate": "2025-07-25",
+      "bookings": {
+        "BOOK001": {
+          "busId": "BUS001",
+          "destination": "Cairo",
+          "departureTime": "2025-07-30T09:00:00",
+          "seatNumber": 12,
+          "bookingDate": "2025-07-24"
+        },
+        "BOOK002": {
+          "busId": "BUS004",
+          "destination": "Luxor",
+          "departureTime": "2025-08-03T19:45:00",
+          "seatNumber": 7,
+          "bookingDate": "2025-07-26"
+        }
+      }
+    },
+    "PASS002": {
+      "name": "Sara Mohamed",
+      "phone": "+201098765432",
+      "email": "sara.m@example.com",
+      "nationalId": "30105011234567",
+      "registrationDate": "2025-07-22",
+      "bookings": {
+        "BOOK003": {
+          "busId": "BUS002",
+          "destination": "Alexandria",
+          "departureTime": "2025-07-29T10:30:00",
+          "seatNumber": 15,
+          "bookingDate": "2025-07-22"
+        }
+      }
+    },
+    "PASS003": {
+      "name": "Mostafa Tarek",
+      "phone": "+201112223334",
+      "email": "mostafa.t@example.com",
+      "nationalId": "29904151234567",
+      "registrationDate": "2025-07-20",
+      "bookings": {
+        "BOOK004": {
+          "busId": "BUS003",
+          "destination": "Mansoura",
+          "departureTime": "2025-07-28T14:00:00",
+          "seatNumber": 9,
+          "bookingDate": "2025-07-20"
+        },
+        "BOOK005": {
+          "busId": "BUS005",
+          "destination": "Aswan",
+          "departureTime": "2025-08-02T20:00:00",
+          "seatNumber": 3,
+          "bookingDate": "2025-07-23"
+        },
+        "BOOK006": {
+          "busId": "BUS006",
+          "destination": "Tanta",
+          "departureTime": "2025-08-05T08:30:00",
+          "seatNumber": 17,
+          "bookingDate": "2025-07-25"
+        }
+      }
+    },
+    "PASS004": {
+      "name": "Yasmine Khaled",
+      "phone": "+201556677889",
+      "email": "yasmine.k@example.com",
+      "nationalId": "29702201234567",
+      "registrationDate": "2025-07-21",
+      "bookings": {
+        "BOOK007": {
+          "busId": "BUS002",
+          "destination": "Alexandria",
+          "departureTime": "2025-07-29T10:30:00",
+          "seatNumber": 20,
+          "bookingDate": "2025-07-22"
+        },
+        "BOOK008": {
+          "busId": "BUS004",
+          "destination": "Cairo",
+          "departureTime": "2025-07-30T16:00:00",
+          "seatNumber": 11,
+          "bookingDate": "2025-07-23"
+        }
+      }
+    },
+    "PASS005": {
+      "name": "Omar Nabil",
+      "phone": "+201445566778",
+      "email": "omar.n@example.com",
+      "nationalId": "30006081234567",
+      "registrationDate": "2025-07-23",
+      "bookings": {
+        "BOOK009": {
+          "busId": "BUS007",
+          "destination": "Port Said",
+          "departureTime": "2025-08-01T13:15:00",
+          "seatNumber": 6,
+          "bookingDate": "2025-07-24"
+        }
+      }
+    }
+  }
+}

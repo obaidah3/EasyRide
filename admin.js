@@ -1,7 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 import { getDatabase, ref, set, onValue, update, remove, get } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
 
-// Firebase configurations
 const busesFirebaseConfig = {
   apiKey: "AIzaSyB3Z4smm1Mfl0X9xehIn0K1_hfuezB3mBw",
   authDomain: "busticketsystem-c4115.firebaseapp.com",
@@ -22,51 +21,45 @@ const passengersFirebaseConfig = {
   appId: "1:989554274702:web:59e73c5435bc6d341574df"
 };
 
-// Initialize Firebase apps with error handling
 let busesApp, passengersApp, busesDb, passengersDb;
 
 try {
   busesApp = initializeApp(busesFirebaseConfig, 'buses');
-  console.log('✅ تم تهيئة تطبيق قاعدة بيانات الحافلات');
+  console.log('Bus database app initialized');
 } catch (error) {
-  console.error('❌ خطأ في تهيئة تطبيق قاعدة بيانات الحافلات:', error);
+  console.error('Bus app init error:', error);
 }
 
 try {
   passengersApp = initializeApp(passengersFirebaseConfig, 'passengers');
-  console.log('✅ تم تهيئة تطبيق قاعدة بيانات الركاب');
+  console.log('Passenger database app initialized');
 } catch (error) {
-  console.error('❌ خطأ في تهيئة تطبيق قاعدة بيانات الركاب:', error);
+  console.error('Passenger app init error:', error);
 }
 
-// Get database instances with error handling
 try {
   busesDb = getDatabase(busesApp);
-  console.log('✅ تم الحصول على مثيل قاعدة بيانات الحافلات');
+  console.log('Bus database instance created');
 } catch (error) {
-  console.error('❌ خطأ في الحصول على مثيل قاعدة بيانات الحافلات:', error);
+  console.error('Bus database error:', error);
 }
 
 try {
   passengersDb = getDatabase(passengersApp);
-  console.log('✅ تم الحصول على مثيل قاعدة بيانات الركاب');
+  console.log('Passenger database instance created');
 } catch (error) {
-  console.error('❌ خطأ في الحصول على مثيل قاعدة بيانات الركاب:', error);
+  console.error('Passenger database error:', error);
 }
 
-// Database references - تم تغيير المسار للوصول للبيانات الموجودة
-const busesRef = ref(busesDb); // الوصول للروت الرئيسي مباشرة
-const passengersRef = ref(passengersDb);
-const bookingsRef = ref(passengersDb, "bookings");
+const busesRef = ref(busesDb);
+const passengersRef = ref(passengersDb, "passengers");
 
-// Global variables
 let buses = {};
 let passengers = {};
 let bookings = {};
 let currentEditType = '';
 let currentEditId = '';
 
-// Function to generate next bus ID
 function getNextBusId() {
   const existingIds = Object.keys(buses).filter(id => id.startsWith('BUS'));
   if (existingIds.length === 0) {
@@ -80,7 +73,6 @@ function getNextBusId() {
   return `BUS${nextNumber.toString().padStart(3, '0')}`;
 }
 
-// Function to generate next passenger ID
 function getNextPassengerId() {
   const existingIds = Object.keys(passengers).filter(id => id.startsWith('PASS'));
   if (existingIds.length === 0) {
@@ -94,7 +86,6 @@ function getNextPassengerId() {
   return `PASS${nextNumber.toString().padStart(3, '0')}`;
 }
 
-// Function to generate next booking ID
 function getNextBookingId() {
   const existingIds = Object.keys(bookings).filter(id => id.startsWith('BOOK'));
   if (existingIds.length === 0) {
@@ -108,11 +99,9 @@ function getNextBookingId() {
   return `BOOK${nextNumber.toString().padStart(3, '0')}`;
 }
 
-// Initialize the application
 function init() {
-  console.log('تهيئة التطبيق...');
+  console.log('Initializing app...');
   
-  // Test Firebase connection
   testFirebaseConnection();
   
   initializeTabs();
@@ -121,65 +110,59 @@ function init() {
   initializeSearch();
   loadData();
   
-  // Update connection status for buses database
   const busesConnectedRef = ref(busesDb, ".info/connected");
   onValue(busesConnectedRef, (snap) => {
-    console.log('حالة اتصال قاعدة بيانات الحافلات:', snap.val());
-    const status = document.getElementById('buses-connection-status') || document.getElementById('connection-status');
+    console.log('Bus DB connection:', snap.val());
+    const status = document.getElementById('connection-status');
     if (status) {
       if (snap.val() === true) {
-        status.textContent = 'متصل - قاعدة بيانات الحافلات';
+        status.textContent = 'Connected - Buses DB';
         status.className = 'connection-status connected';
       } else {
-        status.textContent = 'منقطع - قاعدة بيانات الحافلات';
+        status.textContent = 'Disconnected - Buses DB';
         status.className = 'connection-status disconnected';
       }
     }
   });
 
-  // Update connection status for passengers database
   const passengersConnectedRef = ref(passengersDb, ".info/connected");
   onValue(passengersConnectedRef, (snap) => {
-    console.log('حالة اتصال قاعدة بيانات الركاب:', snap.val());
-    const status = document.getElementById('passengers-connection-status');
+    console.log('Passenger DB connection:', snap.val());
+    const status = document.getElementById('connection-status');
     if (status) {
       if (snap.val() === true) {
-        status.textContent = 'متصل - قاعدة بيانات الركاب';
+        status.textContent = 'Connected - Passengers DB';
         status.className = 'connection-status connected';
       } else {
-        status.textContent = 'منقطع - قاعدة بيانات الركاب';
+        status.textContent = 'Disconnected - Passengers DB';
         status.className = 'connection-status disconnected';
       }
     }
   });
 }
 
-// Test Firebase connection
 async function testFirebaseConnection() {
-  console.log('اختبار الاتصال...');
+  console.log('Testing connection...');
   
   try {
-    // Test buses database
     const busesTestRef = ref(busesDb, 'test');
     await set(busesTestRef, { timestamp: Date.now() });
     await remove(busesTestRef);
-    console.log('✅ نجح الاتصال بقاعدة بيانات الحافلات');
+    console.log('Bus DB connection successful');
   } catch (error) {
-    console.error('❌ فشل الاتصال بقاعدة بيانات الحافلات:', error);
+    console.error('Bus DB connection failed:', error);
   }
 
   try {
-    // Test passengers database
     const passengersTestRef = ref(passengersDb, 'test');
     await set(passengersTestRef, { timestamp: Date.now() });
     await remove(passengersTestRef);
-    console.log('✅ نجح الاتصال بقاعدة بيانات الركاب');
+    console.log('Passenger DB connection successful');
   } catch (error) {
-    console.error('❌ فشل الاتصال بقاعدة بيانات الركاب:', error);
+    console.error('Passenger DB connection failed:', error);
   }
 }
 
-// Tab management
 function initializeTabs() {
   const tabButtons = document.querySelectorAll('.tab-button');
   tabButtons.forEach(button => {
@@ -209,7 +192,6 @@ function showTab(tabName, buttonElement) {
   }
 }
 
-// Modal management
 function initializeModal() {
   const modal = document.getElementById('edit-modal');
   const closeBtn = document.querySelector('.close-btn');
@@ -237,9 +219,7 @@ function closeModal() {
   }
 }
 
-// Form initialization
 function initializeForms() {
-  // Bus form
   const busForm = document.getElementById('add-bus-form');
   if (busForm) {
     busForm.addEventListener('submit', async (e) => {
@@ -256,17 +236,15 @@ function initializeForms() {
       };
 
       try {
-        // إضافة الحافلة مع ID ثابت
         await set(ref(busesDb, busId), busData);
-        showSuccess(`تم إضافة الحافلة ${busId} بنجاح`);
+        showSuccess(`Bus ${busId} added successfully`);
         busForm.reset();
       } catch (error) {
-        showError('خطأ في إضافة الحافلة: ' + error.message);
+        showError('Bus add error: ' + error.message);
       }
     });
   }
 
-  // Passenger form
   const passengerForm = document.getElementById('add-passenger-form');
   if (passengerForm) {
     passengerForm.addEventListener('submit', async (e) => {
@@ -278,20 +256,20 @@ function initializeForms() {
         phone: document.getElementById('passenger-phone').value,
         email: document.getElementById('passenger-email').value,
         nationalId: document.getElementById('passenger-id').value,
-        registrationDate: new Date().toISOString()
+        registrationDate: new Date().toISOString(),
+        bookings: {} // Initialize empty bookings object
       };
 
       try {
         await set(ref(passengersDb, `passengers/${passengerId}`), passengerData);
-        showSuccess(`تم إضافة الراكب ${passengerId} بنجاح`);
+        showSuccess(`Passenger ${passengerId} added successfully`);
         passengerForm.reset();
       } catch (error) {
-        showError('خطأ في إضافة الراكب: ' + error.message);
+        showError('Passenger add error: ' + error.message);
       }
     });
   }
 
-  // Booking form
   const bookingForm = document.getElementById('add-booking-form');
   if (bookingForm) {
     bookingForm.addEventListener('submit', async (e) => {
@@ -302,15 +280,14 @@ function initializeForms() {
       const seatNumber = parseInt(document.getElementById('booking-seat').value);
       const status = document.getElementById('booking-status').value;
 
-      // Validate seat availability
       const bus = buses[busId];
       if (!bus) {
-        showError('الحافلة المحددة غير موجودة');
+        showError('Selected bus not found');
         return;
       }
 
       if (seatNumber > bus.seats) {
-        showError(`رقم المقعد لا يمكن أن يتجاوز ${bus.seats}`);
+        showError(`Seat number cannot exceed ${bus.seats}`);
         return;
       }
 
@@ -322,7 +299,7 @@ function initializeForms() {
       );
 
       if (existingBooking) {
-        showError('هذا المقعد محجوز مسبقاً');
+        showError('Seat already booked');
         return;
       }
 
@@ -333,21 +310,26 @@ function initializeForms() {
         seatNumber,
         status,
         price: bus.price,
-        bookingDate: new Date().toISOString()
+        bookingDate: new Date().toISOString(),
+        // Add bus and passenger details for easier access
+        busFrom: bus.from,
+        busTo: bus.to,
+        busTime: bus.time,
+        passengerName: passengers[passengerId]?.name || 'Unknown'
       };
 
       try {
-        await set(ref(busesDb, `bookings/${bookingId}`), bookingData);
-        showSuccess(`تم إنشاء الحجز ${bookingId} بنجاح`);
+        // Add booking to passenger's bookings
+        await set(ref(passengersDb, `passengers/${passengerId}/bookings/${bookingId}`), bookingData);
+        showSuccess(`Booking ${bookingId} created successfully`);
         bookingForm.reset();
       } catch (error) {
-        showError('خطأ في إنشاء الحجز: ' + error.message);
+        showError('Booking creation error: ' + error.message);
       }
     });
   }
 }
 
-// Search functionality
 function initializeSearch() {
   const busSearch = document.getElementById('bus-search');
   const passengerSearch = document.getElementById('passenger-search');
@@ -358,17 +340,14 @@ function initializeSearch() {
   if (bookingSearch) bookingSearch.addEventListener('input', renderBookings);
 }
 
-// Load data from Firebase
-
 function loadData() {
-  console.log('تحميل البيانات من Firebase...');
+  console.log('Loading data...');
   
-  // Load buses with error handling
+  // Load buses data
   onValue(busesRef, (snapshot) => {
-    console.log('بيانات الحافلات:', snapshot.val());
+    console.log('Bus data:', snapshot.val());
     const data = snapshot.val() || {};
     
-    // فلترة البيانات للحصول على الحافلات فقط (التي تبدأ بـ BUS)
     buses = {};
     Object.keys(data).forEach(key => {
       if (key.startsWith('BUS') && typeof data[key] === 'object' && data[key] !== null) {
@@ -376,69 +355,66 @@ function loadData() {
       }
     });
     
-    // تحميل الحجوزات إذا كانت موجودة
-    if (data.bookings) {
-      bookings = data.bookings;
-    }
-    
-    console.log('عدد الحافلات المحملة:', Object.keys(buses).length);
-    console.log('عدد الحجوزات المحملة:', Object.keys(bookings).length);
+    console.log('Buses loaded:', Object.keys(buses).length);
     renderBuses();
-    renderBookings();
     updateBookingSelects();
     updateAnalytics();
   }, (error) => {
-    console.error('خطأ في تحميل بيانات الحافلات:', error);
-    showError('فشل في تحميل بيانات الحافلات: ' + error.message);
+    console.error('Bus data load error:', error);
+    showError('Bus data load failed: ' + error.message);
   });
 
-  // Load passengers with error handling - الإصلاح هنا
+  // Load passengers data with their bookings
   onValue(passengersRef, (snapshot) => {
-    console.log('بيانات الركاب:', snapshot.val());
+    console.log('Passenger data:', snapshot.val());
     const data = snapshot.val() || {};
     
-    // إعادة تعيين بيانات الركاب
     passengers = {};
+    bookings = {}; // Reset bookings
     
-    // تحميل الركاب من مجلد passengers
-    if (data.passengers && typeof data.passengers === 'object') {
-      passengers = data.passengers;
-    }
-    
-    // تحميل الحجوزات من قاعدة بيانات الركاب أيضاً
-    if (data.bookings && typeof data.bookings === 'object') {
-      // دمج الحجوزات من قاعدة بيانات الركاب مع الحجوزات الموجودة
-      Object.keys(data.bookings).forEach(key => {
-        bookings[key] = data.bookings[key];
-      });
-    }
-    
-    // التحقق من البيانات الأخرى التي قد تكون حجوزات (تبدأ بـ -)
-    Object.keys(data).forEach(key => {
-      if (key.startsWith('-') && typeof data[key] === 'object' && data[key] !== null) {
-        bookings[key] = data[key];
+    // Process each passenger
+    Object.entries(data).forEach(([passengerId, passengerData]) => {
+      if (passengerId.startsWith('PASS') && typeof passengerData === 'object' && passengerData !== null) {
+        // Extract passenger info (excluding bookings)
+        passengers[passengerId] = {
+          name: passengerData.name,
+          phone: passengerData.phone,
+          email: passengerData.email,
+          nationalId: passengerData.nationalId,
+          registrationDate: passengerData.registrationDate
+        };
+
+        // Extract bookings and add to flattened bookings object
+        if (passengerData.bookings && typeof passengerData.bookings === 'object') {
+          Object.entries(passengerData.bookings).forEach(([bookingId, bookingData]) => {
+            bookings[bookingId] = {
+              ...bookingData,
+              passengerId // Ensure passengerId is included
+            };
+          });
+        }
       }
     });
     
-    console.log('عدد الركاب المحملة:', Object.keys(passengers).length);
-    console.log('عدد الحجوزات المحملة من قاعدة بيانات الركاب:', Object.keys(bookings).length);
+    console.log('Passengers loaded:', Object.keys(passengers).length);
+    console.log('Bookings loaded:', Object.keys(bookings).length);
     
     renderPassengers();
     renderBookings();
     updateBookingSelects();
     updateAnalytics();
   }, (error) => {
-    console.error('خطأ في تحميل بيانات الركاب:', error);
-    showError('فشل في تحميل بيانات الركاب: ' + error.message);
+    console.error('Passenger data load error:', error);
+    showError('Passenger data load failed: ' + error.message);
   });
 }
-// Update booking form selects
+
 function updateBookingSelects() {
   const passengerSelect = document.getElementById('booking-passenger');
   const busSelect = document.getElementById('booking-bus');
 
   if (passengerSelect) {
-    passengerSelect.innerHTML = '<option value="">اختر راكب</option>';
+    passengerSelect.innerHTML = '<option value="">Select passenger</option>';
     Object.entries(passengers).forEach(([id, passenger]) => {
       const option = document.createElement('option');
       option.value = id;
@@ -448,7 +424,7 @@ function updateBookingSelects() {
   }
 
   if (busSelect) {
-    busSelect.innerHTML = '<option value="">اختر حافلة</option>';
+    busSelect.innerHTML = '<option value="">Select bus</option>';
     Object.entries(buses).forEach(([id, bus]) => {
       const option = document.createElement('option');
       option.value = id;
@@ -458,7 +434,6 @@ function updateBookingSelects() {
   }
 }
 
-// Render functions
 function renderBuses() {
   const tbody = document.getElementById('buses-table-body');
   if (!tbody) return;
@@ -466,13 +441,12 @@ function renderBuses() {
   const searchTerm = document.getElementById('bus-search')?.value.toLowerCase() || '';
   
   if (Object.keys(buses).length === 0) {
-    tbody.innerHTML = '<tr><td colspan="9" class="loading">لا توجد حافلات</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9" class="loading">No buses found</td></tr>';
     return;
   }
 
   tbody.innerHTML = '';
   
-  // ترتيب الحافلات حسب الـ ID
   const sortedBuses = Object.entries(buses).sort(([a], [b]) => a.localeCompare(b));
   
   sortedBuses.forEach(([id, bus]) => {
@@ -482,6 +456,7 @@ function renderBuses() {
       return;
     }
 
+    // FIX 1: Correct booked seats calculation
     const bookedSeats = Object.values(bookings).filter(booking => 
       booking.busId === id && booking.status === 'confirmed').length;
     const availableSeats = bus.seats - bookedSeats;
@@ -495,10 +470,10 @@ function renderBuses() {
       <td>${bus.seats}</td>
       <td>${bookedSeats}</td>
       <td>${availableSeats}</td>
-      <td>$${bus.price}</td>
+      <td>$${bus.price.toFixed(2)}</td>
       <td>
-        <button class="btn btn-warning btn-small" onclick="editBus('${id}')">تعديل</button>
-        <button class="btn btn-danger btn-small" onclick="deleteBus('${id}')">حذف</button>
+        <button class="btn btn-warning btn-small" onclick="editBus('${id}')">Edit</button>
+        <button class="btn btn-danger btn-small" onclick="deleteBus('${id}')">Delete</button>
       </td>
     `;
     tbody.appendChild(row);
@@ -512,13 +487,12 @@ function renderPassengers() {
   const searchTerm = document.getElementById('passenger-search')?.value.toLowerCase() || '';
   
   if (Object.keys(passengers).length === 0) {
-    tbody.innerHTML = '<tr><td colspan="8" class="loading">لا يوجد ركاب</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" class="loading">No passengers found</td></tr>';
     return;
   }
 
   tbody.innerHTML = '';
   
-  // ترتيب الركاب حسب الـ ID
   const sortedPassengers = Object.entries(passengers).sort(([a], [b]) => a.localeCompare(b));
   
   sortedPassengers.forEach(([id, passenger]) => {
@@ -536,13 +510,13 @@ function renderPassengers() {
       <td><strong>${id}</strong></td>
       <td>${passenger.name}</td>
       <td>${passenger.phone}</td>
-      <td>${passenger.email || 'غير محدد'}</td>
+      <td>${passenger.email || 'N/A'}</td>
       <td>${passenger.nationalId}</td>
       <td>${passengerBookings}</td>
       <td>${formatDate(passenger.registrationDate)}</td>
       <td>
-        <button class="btn btn-warning btn-small" onclick="editPassenger('${id}')">تعديل</button>
-        <button class="btn btn-danger btn-small" onclick="deletePassenger('${id}')">حذف</button>
+        <button class="btn btn-warning btn-small" onclick="editPassenger('${id}')">Edit</button>
+        <button class="btn btn-danger btn-small" onclick="deletePassenger('${id}')">Delete</button>
       </td>
     `;
     tbody.appendChild(row);
@@ -556,41 +530,46 @@ function renderBookings() {
   const searchTerm = document.getElementById('booking-search')?.value.toLowerCase() || '';
   
   if (Object.keys(bookings).length === 0) {
-    tbody.innerHTML = '<tr><td colspan="9" class="loading">لا توجد حجوزات</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9" class="loading">No bookings found</td></tr>';
     return;
   }
 
   tbody.innerHTML = '';
   
-  // ترتيب الحجوزات حسب الـ ID
   const sortedBookings = Object.entries(bookings).sort(([a], [b]) => a.localeCompare(b));
   
   sortedBookings.forEach(([id, booking]) => {
-  const searchableText = `${id} ${booking.passengerName} ${booking.busRoute} ${booking.status}`.toLowerCase();
-  if (searchTerm && !searchableText.includes(searchTerm)) {
-    return;
-  }
+    const passenger = passengers[booking.passengerId];
+    const bus = buses[booking.busId];
+    
+    const passengerName = passenger?.name || booking.passengerName || 'Unknown';
+    const busRoute = bus ? `${bus.from} → ${bus.to}` : `${booking.busFrom || 'Unknown'} → ${booking.busTo || 'Unknown'}`;
+    
+    const searchableText = `${id} ${passengerName} ${busRoute} ${booking.status}`.toLowerCase();
+    if (searchTerm && !searchableText.includes(searchTerm)) {
+      return;
+    }
 
-  const row = document.createElement('tr');
-  row.innerHTML = `
-    <td><strong>${id}</strong></td>
-    <td>${booking.passengerName}</td>
-    <td>${booking.busRoute}</td>
-    <td>-</td>
-    <td>${formatDateTime(booking.busTime)}</td>
-    <td>-</td>
-    <td><span class="status-badge status-${booking.status}">${getStatusText(booking.status)}</span></td>
-    <td>${formatDate(booking.bookingDate)}</td>
-    <td>
-      <button class="btn btn-warning btn-small" onclick="editBooking('${id}')">تعديل</button>
-      <button class="btn btn-danger btn-small" onclick="deleteBooking('${id}')">حذف</button>
-    </td>
-  `;
-  tbody.appendChild(row);
-});
+    // FIX 2: Handle undefined values for price and status
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td><strong>${id}</strong></td>
+      <td>${passengerName}</td>
+      <td>${busRoute}</td>
+      <td>${booking.seatNumber}</td>
+      <td>${formatDateTime(booking.busTime || bus?.time)}</td>
+      <td>$${booking.price?.toFixed(2) || '0.00'}</td>
+      <td><span class="status-badge status-${booking.status}">${getStatusText(booking.status)}</span></td>
+      <td>${formatDate(booking.bookingDate)}</td>
+      <td>
+        <button class="btn btn-warning btn-small" onclick="editBooking('${id}')">Edit</button>
+        <button class="btn btn-danger btn-small" onclick="deleteBooking('${id}')">Delete</button>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
 }
 
-// Edit functions
 window.editBus = function(id) {
   const bus = buses[id];
   if (!bus) return;
@@ -600,34 +579,34 @@ window.editBus = function(id) {
 
   const modal = document.getElementById('edit-modal');
   const form = document.getElementById('edit-form');
-  const title = document.getElementById('edit-modal-title');
+  const title = document.getElementById('modal-title');
 
-  if (title) title.textContent = `تعديل الحافلة ${id}`;
+  if (title) title.textContent = `Edit Bus ${id}`;
   
   if (form) {
-    form.innerHTML = `
+    document.getElementById('modal-form-content').innerHTML = `
       <div class="form-group">
-        <label>رقم الحافلة:</label>
+        <label>Bus ID:</label>
         <input type="text" value="${id}" disabled style="background-color: #f5f5f5;">
       </div>
       <div class="form-group">
-        <label>من:</label>
+        <label>From:</label>
         <input type="text" id="edit-from" value="${bus.from}" required>
       </div>
       <div class="form-group">
-        <label>إلى:</label>
+        <label>To:</label>
         <input type="text" id="edit-to" value="${bus.to}" required>
       </div>
       <div class="form-group">
-        <label>الوقت:</label>
+        <label>Departure Time:</label>
         <input type="datetime-local" id="edit-time" value="${bus.time}" required>
       </div>
       <div class="form-group">
-        <label>عدد المقاعد:</label>
+        <label>Total Seats:</label>
         <input type="number" id="edit-seats" value="${bus.seats}" min="1" required>
       </div>
       <div class="form-group">
-        <label>السعر:</label>
+        <label>Price:</label>
         <input type="number" id="edit-price" value="${bus.price}" step="0.01" min="0" required>
       </div>
     `;
@@ -645,30 +624,30 @@ window.editPassenger = function(id) {
 
   const modal = document.getElementById('edit-modal');
   const form = document.getElementById('edit-form');
-  const title = document.getElementById('edit-modal-title');
+  const title = document.getElementById('modal-title');
 
-  if (title) title.textContent = `تعديل الراكب ${id}`;
+  if (title) title.textContent = `Edit Passenger ${id}`;
   
   if (form) {
-    form.innerHTML = `
+    document.getElementById('modal-form-content').innerHTML = `
       <div class="form-group">
-        <label>رقم الراكب:</label>
+        <label>Passenger ID:</label>
         <input type="text" value="${id}" disabled style="background-color: #f5f5f5;">
       </div>
       <div class="form-group">
-        <label>الاسم:</label>
+        <label>Full Name:</label>
         <input type="text" id="edit-name" value="${passenger.name}" required>
       </div>
       <div class="form-group">
-        <label>الهاتف:</label>
+        <label>Phone Number:</label>
         <input type="tel" id="edit-phone" value="${passenger.phone}" required>
       </div>
       <div class="form-group">
-        <label>البريد الإلكتروني:</label>
+        <label>Email:</label>
         <input type="email" id="edit-email" value="${passenger.email || ''}">
       </div>
       <div class="form-group">
-        <label>الرقم القومي:</label>
+        <label>ID Number:</label>
         <input type="text" id="edit-national-id" value="${passenger.nationalId}" required>
       </div>
     `;
@@ -686,18 +665,18 @@ window.editBooking = function(id) {
 
   const modal = document.getElementById('edit-modal');
   const form = document.getElementById('edit-form');
-  const title = document.getElementById('edit-modal-title');
+  const title = document.getElementById('modal-title');
 
-  if (title) title.textContent = `تعديل الحجز ${id}`;
+  if (title) title.textContent = `Edit Booking ${id}`;
   
   if (form) {
-    form.innerHTML = `
+    document.getElementById('modal-form-content').innerHTML = `
       <div class="form-group">
-        <label>رقم الحجز:</label>
+        <label>Booking ID:</label>
         <input type="text" value="${id}" disabled style="background-color: #f5f5f5;">
       </div>
       <div class="form-group">
-        <label>الراكب:</label>
+        <label>Passenger:</label>
         <select id="edit-passenger" required>
           ${Object.entries(passengers).map(([pid, p]) => 
             `<option value="${pid}" ${pid === booking.passengerId ? 'selected' : ''}>${pid}: ${p.name}</option>`
@@ -705,7 +684,7 @@ window.editBooking = function(id) {
         </select>
       </div>
       <div class="form-group">
-        <label>الحافلة:</label>
+        <label>Bus:</label>
         <select id="edit-bus" required>
           ${Object.entries(buses).map(([bid, b]) => 
             `<option value="${bid}" ${bid === booking.busId ? 'selected' : ''}>${bid}: ${b.from} → ${b.to}</option>`
@@ -713,15 +692,15 @@ window.editBooking = function(id) {
         </select>
       </div>
       <div class="form-group">
-        <label>رقم المقعد:</label>
+        <label>Seat Number:</label>
         <input type="number" id="edit-seat-number" value="${booking.seatNumber}" min="1" required>
       </div>
       <div class="form-group">
-        <label>الحالة:</label>
+        <label>Booking Status:</label>
         <select id="edit-status" required>
-          <option value="confirmed" ${booking.status === 'confirmed' ? 'selected' : ''}>مؤكد</option>
-          <option value="pending" ${booking.status === 'pending' ? 'selected' : ''}>في الانتظار</option>
-          <option value="cancelled" ${booking.status === 'cancelled' ? 'selected' : ''}>ملغي</option>
+          <option value="confirmed" ${booking.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+          <option value="pending" ${booking.status === 'pending' ? 'selected' : ''}>Pending</option>
+          <option value="cancelled" ${booking.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
         </select>
       </div>
     `;
@@ -730,7 +709,6 @@ window.editBooking = function(id) {
   if (modal) modal.classList.add('show');
 };
 
-// Handle edit form submission
 async function handleEditSubmit(e) {
   e.preventDefault();
 
@@ -744,13 +722,12 @@ async function handleEditSubmit(e) {
         price: parseFloat(document.getElementById('edit-price').value)
       };
 
-      // الاحتفاظ ببعض البيانات الأصلية
       if (buses[currentEditId].createdAt) {
         updatedData.createdAt = buses[currentEditId].createdAt;
       }
 
       await update(ref(busesDb, currentEditId), updatedData);
-      showSuccess(`تم تحديث الحافلة ${currentEditId} بنجاح`);
+      showSuccess(`Bus ${currentEditId} updated`);
     } 
     else if (currentEditType === 'passenger') {
       const updatedData = {
@@ -760,26 +737,23 @@ async function handleEditSubmit(e) {
         nationalId: document.getElementById('edit-national-id').value
       };
 
-      // الاحتفاظ ببعض البيانات الأصلية
       if (passengers[currentEditId].registrationDate) {
         updatedData.registrationDate = passengers[currentEditId].registrationDate;
       }
 
       await update(ref(passengersDb, `passengers/${currentEditId}`), updatedData);
-      showSuccess(`تم تحديث الراكب ${currentEditId} بنجاح`);
+      showSuccess(`Passenger ${currentEditId} updated`);
     }
     else if (currentEditType === 'booking') {
       const newBusId = document.getElementById('edit-bus').value;
       const newSeatNumber = parseInt(document.getElementById('edit-seat-number').value);
       
-      // التحقق من توفر المقعد
       const bus = buses[newBusId];
       if (newSeatNumber > bus.seats) {
-        showError(`رقم المقعد لا يمكن أن يتجاوز ${bus.seats}`);
+        showError(`Seat number cannot exceed ${bus.seats}`);
         return;
       }
 
-      // التحقق من عدم حجز المقعد من قبل شخص آخر
       const existingBooking = Object.entries(bookings).find(([bookingId, booking]) => 
         bookingId !== currentEditId &&
         booking.busId === newBusId && 
@@ -788,7 +762,7 @@ async function handleEditSubmit(e) {
       );
 
       if (existingBooking) {
-        showError('هذا المقعد محجوز مسبقاً من راكب آخر');
+        showError('Seat already booked by another passenger');
         return;
       }
 
@@ -800,107 +774,158 @@ async function handleEditSubmit(e) {
         price: bus.price
       };
 
-      // الاحتفاظ ببعض البيانات الأصلية
       if (bookings[currentEditId].bookingDate) {
         updatedData.bookingDate = bookings[currentEditId].bookingDate;
       }
 
-      await update(ref(passengersDb, currentEditId), updatedData);
-      showSuccess(`تم تحديث الحجز ${currentEditId} بنجاح`);
+      // FIX 3: Correct booking update path
+      const passengerId = document.getElementById('edit-passenger').value;
+      await update(ref(passengersDb, `passengers/${passengerId}/bookings/${currentEditId}`), updatedData);
+      showSuccess(`Booking ${currentEditId} updated`);
     }
 
     closeModal();
   } catch (error) {
-    showError('خطأ في التحديث: ' + error.message);
+    showError('Update error: ' + error.message);
   }
 }
 
-// Delete functions
 window.deleteBus = async function(id) {
-  if (confirm(`هل أنت متأكد من حذف الحافلة ${id}؟`)) {
+  if (confirm(`Delete bus ${id}?`)) {
     try {
       await remove(ref(busesDb, id));
-      // Also delete related bookings
       const relatedBookings = Object.entries(bookings).filter(([_, booking]) => booking.busId === id);
       for (const [bookingId] of relatedBookings) {
-        await remove(ref(busesDb, `bookings/${bookingId}`));
+        await remove(ref(passengersDb, `passengers/${booking.passengerId}/bookings/${bookingId}`));
       }
-      showSuccess(`تم حذف الحافلة ${id} بنجاح`);
+      showSuccess(`Bus ${id} deleted`);
     } catch (error) {
-      showError('خطأ في الحذف: ' + error.message);
+      showError('Delete error: ' + error.message);
     }
   }
 };
 
 window.deletePassenger = async function(id) {
-  if (confirm(`هل أنت متأكد من حذف الراكب ${id}؟`)) {
+  if (confirm(`Delete passenger ${id}?`)) {
     try {
       await remove(ref(passengersDb, `passengers/${id}`));
-      // Also delete related bookings
-      const relatedBookings = Object.entries(bookings).filter(([_, booking]) => booking.passengerId === id);
-      for (const [bookingId] of relatedBookings) {
-        await remove(ref(busesDb, `bookings/${bookingId}`));
-      }
-      showSuccess(`تم حذف الراكب ${id} بنجاح`);
+      showSuccess(`Passenger ${id} deleted`);
     } catch (error) {
-      showError('خطأ في الحذف: ' + error.message);
+      showError('Delete error: ' + error.message);
     }
   }
 };
 
 window.deleteBooking = async function(id) {
-  if (confirm(`هل أنت متأكد من حذف الحجز ${id}؟`)) {
+  if (confirm(`Delete booking ${id}?`)) {
     try {
-     await remove(ref(passengersDb, id));
-      showSuccess(`تم حذف الحجز ${id} بنجاح`);
+      const passengerId = bookings[id]?.passengerId;
+      if (!passengerId) {
+        throw new Error('Passenger ID not found for booking');
+      }
+      await remove(ref(passengersDb, `passengers/${passengerId}/bookings/${id}`));
+      showSuccess(`Booking ${id} deleted`);
     } catch (error) {
-      showError('خطأ في الحذف: ' + error.message);
+      showError('Delete error: ' + error.message);
     }
   }
 };
 
-// Analytics
 function updateAnalytics() {
   const totalBuses = Object.keys(buses).length;
   const totalPassengers = Object.keys(passengers).length;
   const totalBookings = Object.keys(bookings).length;
-  const confirmedBookings = Object.values(bookings).filter(b => b.status === 'confirmed').length;
+  
+  // FIX 4: Correct analytics calculations
+  const bookedSeats = Object.values(bookings).filter(b => b.status === 'confirmed').length;
+  const totalSeats = Object.values(buses).reduce((sum, bus) => sum + (bus.seats || 0), 0);
+  const availableSeats = totalSeats - bookedSeats;
+  
   const totalRevenue = Object.values(bookings)
     .filter(b => b.status === 'confirmed')
     .reduce((sum, b) => sum + (b.price || 0), 0);
 
-  const elements = {
-    'total-buses': totalBuses,
-    'total-passengers': totalPassengers,
-    'total-bookings': totalBookings,
-    'confirmed-bookings': confirmedBookings,
-    'total-revenue': `${totalRevenue.toFixed(2)}`
-  };
+  document.getElementById('total-buses').textContent = totalBuses;
+  document.getElementById('total-passengers').textContent = totalPassengers;
+  document.getElementById('total-bookings').textContent = totalBookings;
+  document.getElementById('booked-seats').textContent = bookedSeats;
+  document.getElementById('available-seats').textContent = availableSeats;
+  document.getElementById('total-revenue').textContent = `$${totalRevenue.toFixed(2)}`;
 
-  Object.entries(elements).forEach(([id, value]) => {
-    const element = document.getElementById(id);
-    if (element) element.textContent = value;
+  // FIX 5: Implement popular routes and frequent passengers
+  updateAdvancedAnalytics();
+}
+
+function updateAdvancedAnalytics() {
+  // Popular Routes
+  const routeCounts = {};
+  Object.values(bookings).forEach(booking => {
+    if (booking.status === 'confirmed') {
+      const routeKey = `${booking.busFrom}-${booking.busTo}`;
+      routeCounts[routeKey] = (routeCounts[routeKey] || 0) + 1;
+    }
+  });
+
+  const popularRoutes = Object.entries(routeCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5);
+
+  let routesHtml = '<ol>';
+  popularRoutes.forEach(([route, count]) => {
+    const [from, to] = route.split('-');
+    routesHtml += `<li>${from} → ${to}: <strong>${count}</strong> bookings</li>`;
+  });
+  routesHtml += '</ol>';
+  document.getElementById('popular-routes').innerHTML = routesHtml || '<div>No data available</div>';
+
+  // Frequent Passengers
+  const passengerCounts = {};
+  Object.values(bookings).forEach(booking => {
+    if (booking.status === 'confirmed') {
+      passengerCounts[booking.passengerId] = (passengerCounts[booking.passengerId] || 0) + 1;
+    }
+  });
+
+  const frequentPassengers = Object.entries(passengerCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5);
+
+  let passengersHtml = '<ol>';
+  frequentPassengers.forEach(([passengerId, count]) => {
+    const name = passengers[passengerId]?.name || 'Unknown Passenger';
+    passengersHtml += `<li>${name}: <strong>${count}</strong> bookings</li>`;
+  });
+  passengersHtml += '</ol>';
+  document.getElementById('frequent-passengers').innerHTML = passengersHtml || '<div>No data available</div>';
+}
+
+function formatDate(dateString) {
+  if (!dateString) return 'N/A';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
   });
 }
 
-// Utility functions
-function formatDate(dateString) {
-  if (!dateString) return 'NA';
-  const date = new Date(dateString);
-  return date.toLocaleDateString('ar-EG');
-}
-ref(passengersDb, "passengers")
 function formatDateTime(dateTimeString) {
   if (!dateTimeString) return '';
   const date = new Date(dateTimeString);
-  return date.toLocaleString('ar-EG');
+  return date.toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
 }
 
 function getStatusText(status) {
   const statusMap = {
-    'confirmed': 'confirmed',
-    'pending': 'pending',
-    'cancelled': 'canceled'
+    'confirmed': 'Confirmed',
+    'pending': 'Pending',
+    'cancelled': 'Cancelled'
   };
   return statusMap[status] || status;
 }
@@ -913,9 +938,7 @@ function showError(message) {
   alert('❌ ' + message);
 }
 
-// Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', init);
 
-// Make functions globally available
 window.showTab = showTab;
 window.closeModal = closeModal;
