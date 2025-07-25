@@ -12,7 +12,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/fireba
 
     // Firebase Config for Bus Database (Read)
     const readFirebaseConfig = {
-      apiKey: "AIzaSyB3Z4smm1Mfl0X9xehIn0K1_hfuezB3mBw",
+      apiKey: "apiKey",
       authDomain: "busticketsystem-c4115.firebaseapp.com",
       databaseURL: "https://busticketsystem-c4115-default-rtdb.firebaseio.com",
       projectId: "busticketsystem-c4115",
@@ -23,7 +23,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/fireba
 
     // Firebase Config for Passenger Database (Write)
     const writeFirebaseConfig = {
-      apiKey: "AIzaSyCu5xVwvfFBKhar_ASjj9XDFiyg5voVt0U",
+      apiKey: "ApiKey",
       authDomain: "passengersbussystem.firebaseapp.com",
       databaseURL: "https://passengersbussystem-default-rtdb.firebaseio.com",
       projectId: "passengersbussystem",
