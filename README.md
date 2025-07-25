@@ -320,23 +320,6 @@ We welcome your contributions!
 * Create a feature or fix branch
 * Submit pull requests with clear descriptions
 
-Suggestions for improvement:
-
-* Add login/authentication using Firebase Auth
-* Improve mobile UI
-* Add export options (CSV, PDF)
-* Add search history or booking history for passengers
-
-> Please test all changes and follow ES6 syntax and async/await structure.
-
 ---
 
-## 📃 License
-
-> This project is provided **without a license** for now.
-> If you plan to use or modify it, please add an appropriate license.
-
-This project was built with dedication and effort, and serves as an excellent learning tool and portfolio project.
-
----
 
