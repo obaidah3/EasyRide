@@ -1,4 +1,4 @@
-# EasyRide Bus Ticket Management System
+# 🚌 EasyRide Bus Ticket Management System
 
 **EasyRide** is a comprehensive, real-time **Bus Ticket Management System** built with care and attention to detail. This project was designed and developed from the ground up to simulate a complete ticketing experience both for passengers and administrators.
 
