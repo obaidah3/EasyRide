@@ -11,6 +11,20 @@ All data is stored and updated in real-time using **Firebase Realtime Database**
 
 ---
 
+# 📸 Screenshots
+## Showcasing the EasyRide Bus Ticket Management System in action:
+
+###  🛠️ Admin Dashboard – Bus & Booking Management
+<div align="center"> <img src="https://github.com/user-attachments/assets/865d10eb-add6-423e-b108-7f3d8f25521e" alt="Passenger Booking Page" width="85%"> <br><br> <img src="https://github.com/user-attachments/assets/f2f6853d-914b-4b73-92ae-c26315870436" alt="Passenger Seat Availability & Search" width="85%"> <br> <br><img src="https://github.com/user-attachments/assets/563aa664-2303-47f1-920b-a57f5be4e345" alt="Admin - Add New Bus" width="85%"> <br><br> <img src="https://github.com/user-attachments/assets/bea47e76-2970-48a4-9a33-76deb0e6ec0c" alt="Admin - View & Edit Buses" width="85%"> <br> </div>
+
+### 🧭 Passenger Interface
+<div align="center"> <br> <img src="https://github.com/user-attachments/assets/26d15f9a-e851-4d3d-a89c-dea2a36e40eb" alt="Admin - Booking Details" width="85%"> </div>
+
+### 📊 Realtime Db
+<div align="center"> <img src="https://github.com/user-attachments/assets/26ae49ba-0040-48d4-b8ff-196e00dfd4db" alt="Admin Analytics Dashboard" width="85%"> <br><br> <img src="https://github.com/user-attachments/assets/16d9fb54-97c5-4fb7-9504-a09374da2276" alt="Dashboard - Revenue & Stats" width="85%"> </div>
+
+---
+
 ## ✨ Features
 
 ### 🚌 Manage Buses
@@ -91,8 +105,15 @@ All data is stored and updated in real-time using **Firebase Realtime Database**
 
 ---
 
+🎥 Demo Video
+Watch the full walkthrough of EasyRide in action:
+
+👉 https://youtu.be/zeKscXdOyiM
+
+A live demonstration covering both Admin and Passenger interfaces, real-time Firebase interaction, and all key features in action.
 
 
+---
 
 ## 🛠️ Tech Stack
 
@@ -320,4 +341,3 @@ This project was built with dedication and effort, and serves as an excellent le
 
 ---
 
-> **Built with love and sleepless nights 💻☕ by a passionate developer.**
